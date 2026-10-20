@@ -1,0 +1,70 @@
+name: deploy-pages
+
+# 构建静态站点并发布到 GitHub Pages。
+# 关键点：站点部署在 https://<user>.github.io/<repo>/ 子路径下，
+# 构建时必须把 base 设成 /<repo>/，否则 /assets/xxx.js 会 404。
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Generate sample model
+        run: python3 tools/make_sample.py
+
+      - name: Build with repo sub-path
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: npm run build
+
+      - name: Verify no absolute-root asset URLs leaked
+        run: |
+          if grep -qE '(src|href)="/assets/' dist/index.html; then
+            echo "::error::dist/index.html still references /assets/ (root path)."
+            echo "GitHub Pages serves this repo under a sub-path, so those URLs would 404."
+            exit 1
+          fi
+          echo "OK: asset URLs are sub-path aware."
+
+      - name: Assert the sample model shipped
+        run: |
+          test -f dist/assets/models/RoboticArm.glb || {
+            echo "::error::dist/assets/models/RoboticArm.glb missing — staticFiles copy failed."
+            exit 1
+          }
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -29,6 +29,10 @@ function copyAssets() {
 }
 
 export default defineConfig({
+	// GitHub Pages 部署在 https://<user>.github.io/<repo>/ 这样的子路径下，
+	// 资源必须用相对基址，否则 /assets/index-xxx.js 会 404。
+	// 用环境变量覆盖，本地 dev / preview 保持根路径不受影响。
+	base: process.env.BASE_PATH || '/',
 	plugins: [copyAssets()],
 	build: {
 		// three.js 本身就有 600KB+，单 chunk 是上游的既有形态，

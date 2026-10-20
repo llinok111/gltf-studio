@@ -43,7 +43,7 @@ async function shot(page, name) {
 // ---------------------------------------------------------------- 主流程
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 page.on('pageerror', (e) => console.error('PAGEERROR:', e.message));
-await page.goto(BASE + '?model=/assets/models/RoboticArm.glb', { waitUntil: 'networkidle' });
+await page.goto(BASE + '?model=assets/models/RoboticArm.glb', { waitUntil: 'networkidle' });
 await page.waitForFunction(() => window.VIEWER && window.VIEWER.scene, { timeout: 60000 });
 await page.waitForTimeout(2200);
 
@@ -188,7 +188,7 @@ for (const [w, h, name] of [
 	[390, 844, '11-mobile-390.png'],
 ]) {
 	const p2 = await browser.newPage({ viewport: { width: w, height: h } });
-	await p2.goto(BASE + '?model=/assets/models/RoboticArm.glb', { waitUntil: 'networkidle' });
+	await p2.goto(BASE + '?model=assets/models/RoboticArm.glb', { waitUntil: 'networkidle' });
 	await p2.waitForFunction(() => window.VIEWER && window.VIEWER.scene, { timeout: 60000 });
 	await p2.waitForTimeout(2000);
 	// 移动端展示剖切 + 抽屉

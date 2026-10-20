@@ -49,7 +49,9 @@ check('工作台面板渲染', Boolean(panel));
 
 // 2. 载入模型
 console.log('→ 载入 RoboticArm.glb');
-await page.goto(BASE + '?model=/assets/models/RoboticArm.glb', { waitUntil: 'networkidle' });
+// 模型路径用相对地址，这样 BASE_URL 带子路径（GitHub Pages 的 /gltf-studio/）
+// 时也能正确解析；写死 /assets/... 只在根路径部署下成立。
+await page.goto(BASE + '?model=assets/models/RoboticArm.glb', { waitUntil: 'networkidle' });
 await page.waitForFunction(() => window.VIEWER && window.VIEWER.scene, { timeout: 90000 });
 await page.waitForTimeout(2500);
 

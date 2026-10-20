@@ -102,6 +102,8 @@
 
 ## 4. 快速开始
 
+**在线体验**：https://llinok111.github.io/gltf-studio/
+
 ```bash
 npm install
 npm run dev          # http://localhost:3000
@@ -110,8 +112,12 @@ npm run dev          # http://localhost:3000
 打开后可以直接拖入 `.glb` / `.gltf` / 含贴图的 `.zip`，或访问：
 
 ```
-http://localhost:3000/?model=/assets/models/RoboticArm.glb
+http://localhost:3000/?model=assets/models/RoboticArm.glb
 ```
+
+> 注意 `?model=` 后面用的是**相对地址**（没有开头的 `/`）。
+> 这样同一份代码在根路径部署和 GitHub Pages 的子路径（`/gltf-studio/`）下都能用。
+> 写死 `/assets/...` 只在本机根路径成立，推上 Pages 会 404。
 
 ### 生产构建
 
@@ -119,6 +125,16 @@ http://localhost:3000/?model=/assets/models/RoboticArm.glb
 npm run build        # 输出到 dist/
 npm run preview
 ```
+
+部署到 GitHub Pages 这类子路径时，必须指定 base：
+
+```bash
+# Git Bash 下要加 MSYS_NO_PATHCONV=1，否则 /gltf-studio/ 会被转成本机绝对路径
+MSYS_NO_PATHCONV=1 BASE_PATH=/gltf-studio/ npm run build
+```
+
+仓库里已配好 `.github/workflows/deploy-pages.yml`，推送到 `main` 会自动构建并发布，
+并在发布前校验「产物里没有残留 `/assets/` 这种根路径引用」。
 
 ### 运行测试
 
@@ -128,6 +144,13 @@ npm run dev
 
 # 终端 2
 npm run test:e2e     # 19 项端到端断言，输出截图到 shots/
+```
+
+验收脚本接受 `BASE_URL`，可以指向任意部署形态：
+
+```bash
+BASE_URL=http://127.0.0.1:4173/ node tools/verify.mjs              # 生产构建
+BASE_URL=http://127.0.0.1:4399/gltf-studio/ node tools/verify.mjs  # 模拟 Pages 子路径
 ```
 
 ### 重新生成示例模型
