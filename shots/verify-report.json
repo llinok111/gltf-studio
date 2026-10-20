@@ -1,0 +1,130 @@
+{
+  "base": "http://127.0.0.1:5183/",
+  "results": [
+    {
+      "name": "工作台面板渲染",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "模型加载成功",
+      "ok": true,
+      "detail": "16 meshes / 808 tris"
+    },
+    {
+      "name": "零件树生成节点",
+      "ok": true,
+      "detail": "17 行"
+    },
+    {
+      "name": "剖切启用",
+      "ok": true,
+      "detail": "16 个 mesh 接管"
+    },
+    {
+      "name": "裁剪平面挂载到材质",
+      "ok": true,
+      "detail": "constant=0.402 normal=[0.00,-1.00,0.00]"
+    },
+    {
+      "name": "模板缓冲代理生成",
+      "ok": true,
+      "detail": "16 组"
+    },
+    {
+      "name": "剖切封盖实心填充",
+      "ok": true,
+      "detail": "封盖像素 3,034（占画面 0.26%）"
+    },
+    {
+      "name": "爆炸视图动画到位",
+      "ok": true,
+      "detail": "amount=1.000"
+    },
+    {
+      "name": "节点位移生效",
+      "ok": true,
+      "detail": "14/16 节点偏移"
+    },
+    {
+      "name": "标注锚点创建并投影",
+      "ok": true,
+      "detail": "dot transform=translate(432px, 607.5px)"
+    },
+    {
+      "name": "真实鼠标点选放置标注",
+      "ok": true,
+      "detail": "命中「foot_fl」→ 标注「foot_fl」，点选模式已退出"
+    },
+    {
+      "name": "测距计算与标签",
+      "ok": true,
+      "detail": "距离=4.482 标签=4.482"
+    },
+    {
+      "name": "项目序列化",
+      "ok": true,
+      "detail": "699 字节, 1 条标注"
+    },
+    {
+      "name": "项目 JSON 往返还原",
+      "ok": true,
+      "detail": "axis/position/annotations 均一致（标注标题「foot_fl」）"
+    },
+    {
+      "name": "隔离只保留目标子树",
+      "ok": true,
+      "detail": "可见零件：arm_upper, joint_elbow, arm_fore, wrist, palm, finger_left, finger_right"
+    },
+    {
+      "name": "剖切拖动性能（相对基线）",
+      "ok": true,
+      "detail": "GPU=AMD, AMD Radeon 780M Graphics  | 基线 p95=17.9ms → 拖动 p95=18.2ms（+0.3ms）"
+    },
+    {
+      "name": "剖切拖动达到 60fps",
+      "ok": true,
+      "detail": "avg=16.66ms p50=16.60ms p95=18.20ms max=19.00ms"
+    },
+    {
+      "name": "390px 响应式无横向溢出",
+      "ok": true,
+      "detail": "panel=390px bottom=0px canvas=390px"
+    },
+    {
+      "name": "无 JS 运行时错误",
+      "ok": true,
+      "detail": "clean"
+    }
+  ],
+  "perf": {
+    "gpu": "ANGLE (AMD, AMD Radeon 780M Graphics (0x00001900) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "baseline": {
+      "frames": 149,
+      "avg": 16.664429530201343,
+      "p50": 16.700000000186265,
+      "p95": 17.90000000037253,
+      "max": 19.200000000186265
+    },
+    "static": {
+      "frames": 149,
+      "avg": 16.667114093962233,
+      "p50": 16.600000000558794,
+      "p95": 18,
+      "max": 18.59999999962747
+    },
+    "drag": {
+      "frames": 149,
+      "avg": 16.660402684566257,
+      "p50": 16.600000000558794,
+      "p95": 18.199999999254942,
+      "max": 19
+    }
+  },
+  "info": {
+    "meshes": 16,
+    "tris": 808,
+    "children": 1
+  },
+  "errors": []
+}

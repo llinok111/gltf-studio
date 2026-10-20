@@ -1,0 +1,50 @@
+{
+	"private": true,
+	"version": "1.5.1",
+	"name": "gltf-studio",
+	"description": "glTF 2.0 workbench: live cross-section, exploded view, part hierarchy, 3D annotations and measurement. Built on donmccurdy/three-gltf-viewer.",
+	"author": "Don McCurdy <dm@donmccurdy.com> (upstream); glTF Studio additions by llinok111",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/llinok111/gltf-studio"
+	},
+	"main": "public/app.js",
+	"browserslist": [
+		">1%",
+		"not dead"
+	],
+	"staticFiles": {
+		"staticPath": [
+			{
+				"staticPath": "assets",
+				"staticOutDir": "assets"
+			}
+		]
+	},
+	"scripts": {
+		"dev": "vite --port 3000",
+		"build": "vite build",
+		"preview": "vite preview --port 4173",
+		"clean": "rm -rf dist/* || true",
+		"test": "node tools/verify.mjs",
+		"test:e2e": "node tools/verify.mjs",
+		"shots": "node tools/shots.mjs",
+		"sample": "python tools/make_sample.py",
+		"deploy": "npm run build && vercel --local-config vercel.json --prod",
+		"postversion": "git push && git push --tags"
+	},
+	"dependencies": {
+		"dat.gui": "^0.7.9",
+		"gltf-validator": "^2.0.0-dev.3.10",
+		"query-string": "^8.1.0",
+		"simple-dropzone": "^0.8.3",
+		"three": "^0.176.0",
+		"vhtml": "^2.2.0"
+	},
+	"devDependencies": {
+		"playwright": "^1.64.1",
+		"prettier": "^3.2.5",
+		"vite": "^6.4.2"
+	}
+}

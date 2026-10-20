@@ -1,0 +1,49 @@
+name: e2e
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate sample model
+        run: python3 tools/make_sample.py
+
+      - name: Start dev server
+        run: |
+          npm run dev -- --host 127.0.0.1 &
+          npx wait-on http://127.0.0.1:3000 --timeout 60000
+
+      - name: Run end-to-end assertions
+        run: BASE_URL=http://127.0.0.1:3000/ node tools/verify.mjs
+        # CI 跑在软件渲染（SwiftShader）上，性能断言会按"相对基线"判定，
+        # 绝对值断言在本环境不适用，因此只校验功能项。
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots
+          path: shots/
+          retention-days: 14
