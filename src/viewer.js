@@ -227,6 +227,63 @@ export class Viewer {
 		cam.updateProjectionMatrix();
 	}
 
+	/**
+	 * 把模型包围盒的屏幕投影居中到"面板之外的可视区"。
+	 *
+	 * 做法：把包围盒 8 个角投影到 NDC，算出投影框的中心与原点（NDC 0,0）的偏差，
+	 * 再用 controls.target 把这个偏差补回去 —— 只平移观察目标，不改相机朝向，
+	 * 所以轨道拖动的旋转中心仍然是模型，手感不变。
+	 *
+	 * @param {THREE.Object3D} object
+	 * @param {{fullW:number, fullH:number, w:number, h:number}} vp
+	 */
+	centerContentOnScreen(object, vp) {
+		const cam = this.defaultCamera;
+		cam.updateMatrixWorld();
+
+		const box = new Box3().setFromObject(object);
+		if (box.isEmpty()) return;
+
+		const v = new Vector3();
+		let minX = Infinity;
+		let maxX = -Infinity;
+		let minY = Infinity;
+		let maxY = -Infinity;
+
+		for (let i = 0; i < 8; i++) {
+			v.set(
+				i & 1 ? box.max.x : box.min.x,
+				i & 2 ? box.max.y : box.min.y,
+				i & 4 ? box.max.z : box.min.z,
+			).project(cam);
+			minX = Math.min(minX, v.x);
+			maxX = Math.max(maxX, v.x);
+			minY = Math.min(minY, v.y);
+			maxY = Math.max(maxY, v.y);
+		}
+
+		const cx = (minX + maxX) / 2;
+		const cy = (minY + maxY) / 2;
+		if (!isFinite(cx) || !isFinite(cy)) return;
+
+		// 只修正垂直方向。
+		// 水平方向已经由 setViewOffset 按面板宽度处理过，再叠加一次会重复偏移
+		// （实测会把模型从 573px 推到 700px，明显偏右）。
+		const dist = cam.position.distanceTo(this.controls.target) || 1;
+		const halfH = dist * Math.tan(((cam.fov * Math.PI) / 180) / 2);
+
+		const right = new Vector3();
+		const up = new Vector3();
+		cam.matrixWorld.extractBasis(right, up, new Vector3());
+
+		const shift = new Vector3().addScaledVector(up, cy * halfH);
+
+		this.controls.target.add(shift);
+		cam.position.add(shift);
+		cam.lookAt(this.controls.target);
+		this.controls.update();
+	}
+
 	/** 计算当前"面板之外可视区"的宽高（用于取景距离） */
 	getEffectiveViewport() {
 		const fullW = this.el.clientWidth || 1;
@@ -376,6 +433,11 @@ export class Viewer {
 			this.defaultCamera.lookAt(new Vector3());
 			this.controls.target.set(0, 0, 0);
 			this.controls.update();
+
+			// 收尾微调：按包围盒的实际屏幕投影做一次居中。
+			// 只看原点是不够的 —— 模型平移后原点未必是它的视觉中心
+			// （例如机械臂的底座宽、上臂细长，包围盒中心会偏下）。
+			this.centerContentOnScreen(object, vp);
 		}
 
 		this.setCamera(DEFAULT_CAMERA);
