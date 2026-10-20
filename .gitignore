@@ -4,3 +4,6 @@ dist
 .vercel
 .DS_Store
 npm-debug.log*
+
+# 断言证据截图（每次跑 e2e 都会重写，不入库）
+shots/verify/

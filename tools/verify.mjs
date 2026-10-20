@@ -9,7 +9,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:5183/';
-const OUT = path.resolve('shots');
+// 断言用的证据截图单独放子目录，避免和 tools/shots.mjs 生成的交付截图混淆
+const OUT = path.resolve('shots', 'verify');
 fs.mkdirSync(OUT, { recursive: true });
 
 const results = [];
@@ -141,7 +142,7 @@ check(
 	`封盖像素 ${capPixels.cap.toLocaleString()}（占画面 ${((capPixels.cap / capPixels.total) * 100).toFixed(2)}%）`,
 );
 
-await page.screenshot({ path: path.join(OUT, '01-section.png') });
+await page.screenshot({ path: path.join(OUT, 'verify-01-section.png') });
 
 // 5. 爆炸视图
 await page.click('#exp-toggle');
@@ -159,7 +160,7 @@ const moved = await page.evaluate(() => {
 	return { movedCount, total: e.nodes.length };
 });
 check('节点位移生效', moved.movedCount > 0, `${moved.movedCount}/${moved.total} 节点偏移`);
-await page.screenshot({ path: path.join(OUT, '02-explode.png') });
+await page.screenshot({ path: path.join(OUT, 'verify-02-explode.png') });
 
 // 6. 标注：用射线扫描找到一个真实命中点，再放标注
 const anno = await page.evaluate(() => {
@@ -244,7 +245,7 @@ if (clickTarget) {
 	check('真实鼠标点选放置标注', false, '未找到可点击的模型像素');
 }
 await page.waitForTimeout(300);
-await page.screenshot({ path: path.join(OUT, '03-annotation.png') });
+await page.screenshot({ path: path.join(OUT, 'verify-03-annotation.png') });
 
 // 7. 测量
 const meas = await page.evaluate(() => {
@@ -289,7 +290,7 @@ check(
 	`距离=${meas.dist ? meas.dist.toFixed(3) : '-'} 标签=${meas.text || '-'}`,
 );
 await page.waitForTimeout(300);
-await page.screenshot({ path: path.join(OUT, '04-measure.png') });
+await page.screenshot({ path: path.join(OUT, 'verify-04-measure.png') });
 
 // 8. 项目序列化往返
 const proj = await page.evaluate(() => {
@@ -494,15 +495,15 @@ check(
 	!resp.overflowX && resp.panelWidth <= 391,
 	`panel=${resp.panelWidth}px bottom=${resp.panelBottom}px canvas=${resp.canvasW}px`,
 );
-await page.screenshot({ path: path.join(OUT, '05-mobile-390.png') });
+await page.screenshot({ path: path.join(OUT, 'verify-05-mobile-390.png') });
 
 await page.setViewportSize({ width: 768, height: 1024 });
 await page.waitForTimeout(600);
-await page.screenshot({ path: path.join(OUT, '06-tablet-768.png') });
+await page.screenshot({ path: path.join(OUT, 'verify-06-tablet-768.png') });
 
 await page.setViewportSize({ width: 1440, height: 900 });
 await page.waitForTimeout(600);
-await page.screenshot({ path: path.join(OUT, '07-desktop-1440.png') });
+await page.screenshot({ path: path.join(OUT, 'verify-07-desktop-1440.png') });
 
 // 错误汇总
 check('无 JS 运行时错误', errors.length === 0, errors.slice(0, 3).join(' | ') || 'clean');

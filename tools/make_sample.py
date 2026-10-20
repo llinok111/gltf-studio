@@ -171,11 +171,26 @@ def qz(deg):
 
 
 # ----------------------------------------------------------------- 材质
+#
+# 注意：glTF 的 baseColorFactor 是**线性空间**值，不是 sRGB。
+# 第一版直接照 sRGB 数值填（比如橙色写 [0.87,0.42,0.12]），
+# 渲染时又被当成线性值经色调映射输出，结果橙色变成浅黄、整体发灰发白。
+# 这里统一从 sRGB 十六进制转成线性，保证"看起来就是那个颜色"。
 
-m_body = add_material("body_orange", [0.87, 0.42, 0.12], 0.10, 0.55)
-m_steel = add_material("joint_steel", [0.66, 0.69, 0.73], 0.85, 0.28)
-m_dark = add_material("rubber_dark", [0.11, 0.12, 0.14], 0.05, 0.88)
-m_accent = add_material("accent_teal", [0.13, 0.55, 0.58], 0.30, 0.40)
+
+def srgb_to_linear(hex_str):
+    h = hex_str.lstrip('#')
+    out = []
+    for i in (0, 2, 4):
+        c = int(h[i : i + 2], 16) / 255
+        out.append(round(c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4, 4))
+    return out
+
+
+m_body = add_material("body_orange", srgb_to_linear("#de6b1f"), 0.10, 0.55)
+m_steel = add_material("joint_steel", srgb_to_linear("#a8adb5"), 0.85, 0.28)
+m_dark = add_material("rubber_dark", srgb_to_linear("#1c1e22"), 0.05, 0.88)
+m_accent = add_material("accent_teal", srgb_to_linear("#21a3a8"), 0.30, 0.40)
 
 # ----------------------------------------------------------------- 几何
 # 关键：每个零件在"父节点的关节原点"处与父件重叠，避免悬空。

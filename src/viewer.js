@@ -366,8 +366,9 @@ export class Viewer {
 			const pad = vp.h < vp.fullH * 0.8 ? 1.35 : 1.06;
 			const dist = Math.max(radius / Math.sin(fov / 2), radius / Math.sin(hFov / 2)) * pad;
 
-			// 经典 3/4 视角
-			const dir = new Vector3(0.62, 0.40, 0.85).normalize();
+			// 经典 3/4 视角。X/Z 比例接近 1:1，配合模型自身的 Z 轴折臂，
+			// 视觉重心才会落在画面中央（纯 0.62:0.85 会让上臂明显向左倾）。
+			const dir = new Vector3(0.86, 0.40, 0.72).normalize();
 			this.defaultCamera.position.copy(dir.multiplyScalar(dist));
 
 			this.applyViewOffset();

@@ -21,6 +21,23 @@ in the LICENSE file of this repository, with the original copyright
 notice preserved.
 
 ------------------------------------------------------------------------
+ADDITIONS
+------------------------------------------------------------------------
+
+Portions of this software (the "Studio" workbench: live cross-section,
+exploded view, part hierarchy, 3D annotations, measurement, project files)
+are additions to the upstream project.
+
+  Copyright (c) 2026 llinok111
+
+These additions are released under the same MIT terms as the LICENSE file.
+
+The LICENSE file is kept as the unmodified upstream MIT text on purpose,
+so that GitHub's license detection reports "MIT" rather than "Other".
+The upstream notice must therefore stay in LICENSE, and this NOTICE file
+must stay alongside it in any redistribution.
+
+------------------------------------------------------------------------
 WHAT THIS FORK ADDS
 ------------------------------------------------------------------------
 

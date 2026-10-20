@@ -1,4 +1,4 @@
-The MIT License (MIT)
+MIT License
 
 Copyright (c) 2023 Don McCurdy
 
@@ -19,14 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-------------------------------------------------------------------------
-
-Portions of this software (the "Studio" workbench: live cross-section,
-exploded view, part hierarchy, 3D annotations, measurement, project files)
-are additions to the upstream project.
-
-Copyright (c) 2026 llinok111
-
-These additions are released under the same MIT terms as above.
-Upstream origin and the full list of modifications are documented in NOTICE.
